@@ -8,7 +8,10 @@ const registerValidation = (body) => {
         password: passwordComplexity().required().label("Password"),
     });
 
-    return schema.validate(body);
+    return schema.validate(body,
+        {
+            abortEarly: false,
+        });
 }
 
 const loginValidation = (body) => {
@@ -29,4 +32,3 @@ const refreshTokenValidation = (body) => {
 }
 
 export { registerValidation, loginValidation, refreshTokenValidation };
-

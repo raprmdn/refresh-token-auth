@@ -3,13 +3,19 @@ import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import {loginValidation, registerValidation} from "../utils/validationSchema.js";
 import generateToken from "../utils/generateToken.js";
+import errorsMessage from "../helpers/messageValidation.js";
 
 const router = Router();
 
 router.post("/register", async (req, res) => {
     try {
         const { error } = registerValidation(req.body);
-        if (error) return res.status(400).json({ error: true, message: error.details[0].message });
+        if (error) {
+            return res.status(422).json({
+                error: true,
+                message: errorsMessage(error)
+            });
+        }
 
         const user = await User.findOne({ email: req.body.email });
         if (user) return res.status(400).json({ error: true, message: "The given email already been taken." });
